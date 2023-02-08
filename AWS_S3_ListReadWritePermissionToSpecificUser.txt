@@ -1,0 +1,62 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {	// Bucket Policy available to samplebucket1243 and other buckets showing "Restrict Permission" error in bucket policy section
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+				"s3:GetBucketPolicy",							// Show bucket policy
+				"s3:PutBucketPolicy",							// add bucket policy
+                "s3:DeleteBucketPolicy",						// delete bucket policy
+                "s3:ListBucket"									// list all the objects of bucket
+			]	
+            "Resource": "arn:aws:s3:::samplebucket1243"			// Only specific bucket
+        },
+        {	// To add and show objects in specific bucket (Here, samplebucket1243/* and samplebucket1252/*)
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",									// add objects	
+                "s3:GetObject",									// show objects
+				"s3:DeleteObject"								// delete object
+            ],
+            "Resource": [
+                "arn:aws:s3:::samplebucket1243/*",				// Specific bucket and it's objects
+                "arn:aws:s3:::samplebucket1252/*"
+            ]
+        },
+        {	// List all the buckets which is present in the S3 and Create new bucket permission
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",							// list all the buckets	
+                "s3:PutBucketOwnershipControls",				// bucket ownership controls (useful when set the bucket creation permission)
+                "s3:CreateBucket",								// create bucket
+		    "s3:getBucketVersioning"						// check the bucket versioning (useful when set the bucket deletion permission)
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+
+
+
+/*
+
+NOTE: 
+-----------------------------
+For bucket's object deletion.
+
+1) Include "s3:getBucketVersioning" for all "Resource (*)"
+2) Include "s3:DeleteObject" for specific bucket ARN (Here, "arn:aws:s3:::samplebucket1243/*" or "arn:aws:s3:::samplebucket1252/*")
+
+
+For bucket creation
+
+1) include "s3:PutBucketOwnershipControls" for bucket's ownership
+2) include "s3:CreateBucket" for creating buckets
+
+This will add to server support's billing IAM account's policy
+"s3:GetBucketPolicy",
+"s3:PutBucketPolicy",
+*/
